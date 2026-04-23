@@ -42,7 +42,7 @@ namespace SchoolApp.Controllers
             try
             {
                 await _applicationService.TeacherService.SignUpUserAsync(teacherSignupDTO);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Login", "User");
             }
             catch (Exception ex) 
             { 

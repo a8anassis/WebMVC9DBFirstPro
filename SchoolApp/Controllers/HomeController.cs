@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SchoolApp.Models;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace SchoolApp.Controllers
 {
@@ -11,7 +12,14 @@ namespace SchoolApp.Controllers
         [AllowAnonymous]
         public IActionResult Index()
         {
-            return View();
+            ClaimsPrincipal? principal = HttpContext.User;
+
+            if (!principal.Identity!.IsAuthenticated)
+            {
+                return View();
+            }
+
+            return RedirectToAction("Index", "User");
         }
 
         [HttpGet]

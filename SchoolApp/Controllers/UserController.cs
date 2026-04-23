@@ -108,11 +108,11 @@ namespace SchoolApp.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize]
         public async Task<IActionResult> Logout()
         {
-
             var username = User.Identity!.Name;
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             _logger.LogInformation("User {Username} logged out successfully.", username);

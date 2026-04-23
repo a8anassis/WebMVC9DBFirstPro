@@ -38,9 +38,11 @@ namespace SchoolApp
                 .AddCookie(options =>
                 {
                     options.LoginPath = "/User/Login";
-                    options.AccessDeniedPath = "/Home/AccessDenied";
+                    options.AccessDeniedPath = "/Home/AccessDenied";    //  redirect αν ο χρήστης δεν έχει δικαιώματα
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                     options.SlidingExpiration = true;   // reset timout
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;  // μόνο HTTPS
                 });
 
             builder.Services.AddAuthorizationBuilder()

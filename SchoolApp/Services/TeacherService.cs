@@ -29,10 +29,13 @@ namespace SchoolApp.Services
         {
             Teacher teacher = _mapper.Map<Teacher>(request);
             User user = _mapper.Map<User>(request);
+            Console.WriteLine("DTO USER: " + user);
 
             try
             {
                 User? existingUser = await _unitOfWork.UserRepository.GetUserByUsernameAsync(user.Username);
+
+                //Console.WriteLine("EXISTING USER: " + existingUser);
 
                 if (existingUser != null)
                 {

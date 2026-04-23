@@ -26,6 +26,29 @@ namespace SchoolApp.Services
             _logger = logger;
         }
 
+        public async Task<UserReadOnlyDTO?> GetUserByUsernameAsync(string username)
+        {
+            try
+            {
+                User? user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(username);
+                if (user == null)
+                {
+                    throw new EntityNotFoundException("User", "User with username: " +
+                        " not found");
+                }
+
+                _logger.LogInformation("User found: {Username}", username);
+                return _mapper.Map<UserReadOnlyDTO>(user);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                _logger.LogError("Error retrieving user by username: {Username}. {Message}",
+                    username, ex.Message);
+                throw;
+            }
+        }
+
+
         public async Task<PaginatedResult<UserReadOnlyDTO>> GetPaginatedUsersFilteredAsync(
             int pageNumber, int pageSize, UserFiltersDTO userFiltersDTO)
         {
@@ -58,30 +81,6 @@ namespace SchoolApp.Services
 
             _logger.LogInformation("Retrieved {Count} users", dtoResult.Data.Count);
             return dtoResult;
-        }
-
-       
-
-        public async Task<UserReadOnlyDTO?> GetUserByUsernameAsync(string username)
-        {
-            try
-            {
-                User? user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(username);
-                if (user == null)
-                {
-                    throw new EntityNotFoundException("User", "User with username: " + 
-                        " not found");
-                }
-                
-                _logger.LogInformation("User found: {Username}", username);
-                return _mapper.Map<UserReadOnlyDTO>(user);
-            }
-            catch (EntityNotFoundException ex)
-            {
-                _logger.LogError("Error retrieving user by username: {Username}. {Message}", 
-                    username, ex.Message);
-                throw;
-            }
         }
 
         public async Task<User?> VerifyAndGetUserAsync(UserLoginDTO credentials)
